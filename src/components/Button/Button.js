@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import s from './Button.module.css';
 
 const Button = ({ loadMore }) => {
@@ -6,6 +7,10 @@ const Button = ({ loadMore }) => {
       Load more
     </button>
   );
+};
+
+Button.propTypes = {
+  loadMore: PropTypes.func,
 };
 
 export default Button;

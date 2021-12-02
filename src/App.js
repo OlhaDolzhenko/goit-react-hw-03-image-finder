@@ -42,10 +42,11 @@ class App extends Component {
   }
 
   handleFetch = () => {
+    const { search, page } = this.state;
     this.setState({ status: Status.PENDING });
 
     setTimeout(() => {
-      API.fetchImages(this.state.search, this.state.page)
+      API.fetchImages(search, page)
         .then(images =>
           this.setState(prevState => ({
             images: [...prevState.images, ...images.hits],
@@ -73,7 +74,6 @@ class App extends Component {
   };
 
   onImageClick = event => {
-    console.log(event.target.dataset.source);
     this.setState({
       modalSrc: event.target.dataset.source,
       modalAlt: event.target.alt,
@@ -82,14 +82,12 @@ class App extends Component {
   };
 
   render() {
+    const { images, status, showModal, modalSrc, modalAlt } = this.state;
     return (
       <div className="App">
         <SearchBar onSubmit={this.handleFormSubmit} />
-        <ImageGallery
-          images={this.state.images}
-          onImageClick={this.onImageClick}
-        />
-        {this.state.status === 'pending' && (
+        <ImageGallery images={images} onImageClick={this.onImageClick} />
+        {status === 'pending' && (
           <div className="Loader">
             <Loader
               type="Hearts"
@@ -100,13 +98,11 @@ class App extends Component {
             />
           </div>
         )}
-        {this.state.status === 'resolved' && (
-          <Button loadMore={this.handleFetch} />
-        )}
-        {this.state.showModal && (
+        {status === 'resolved' && <Button loadMore={this.handleFetch} />}
+        {showModal && (
           <Modal
-            bigImage={this.state.modalSrc}
-            alt={this.state.modalAlt}
+            bigImage={modalSrc}
+            alt={modalAlt}
             onClose={this.toggleModal}
           />
         )}
